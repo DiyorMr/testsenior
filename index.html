@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML & CSS Interaktiv Test Platformasi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'Fira Code', monospace; }
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen flex flex-col transition-colors duration-300 custom-scrollbar">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-gray-800 glass transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showScreen('screen-welcome')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-accent-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                        <i data-lucide="code-2" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight gradient-text">DevTest UX</span>
+                        <span class="text-xs block text-gray-500 dark:text-gray-400 font-medium">Frontend Quiz Academy</span>
+                    </div>
+                </div>
+
+                <!-- Right Nav Items -->
+                <div class="flex items-center gap-3">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggleBtn" onclick="toggleDarkMode()" class="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-all">
+                        <i data-lucide="moon" id="themeIconMoon" class="w-5 h-5 hidden"></i>
+                        <i data-lucide="sun" id="themeIconSun" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Code & Backend Spec Button -->
+                    <button onclick="openModal('modal-code-docs')" class="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold border border-brand-500/30 bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 hover:bg-brand-100 transition-all">
+                        <i data-lucide="rocket" class="w-4 h-4"></i>
+                        <span>Vercel Deploy & Serverless</span>
+                    </button>
+
+                    <!-- Mentor Mode Toggle -->
+                    <button onclick="handleMentorAccess()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-brand-600 to-accent-600 hover:from-brand-700 hover:to-accent-700 text-white shadow-md shadow-brand-500/20 transition-all">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span id="mentorBtnText">Mentor Paneli</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-center">
+
+        <!-- 1. WELCOME & TEST START SCREEN -->
+        <section id="screen-welcome" class="space-y-8 animate-fadeIn">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 text-brand-600 dark:text-brand-400 text-xs font-semibold uppercase tracking-wider">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    Interactive Junior Frontend Testing
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+                    HTML va CSS bilmingizni <span class="gradient-text">sinovdan o‘tkazing</span>
+                </h1>
+                <p class="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
+                    IT O‘quv markazi junior frontend dasturchilari uchun 200 ta tayyorlangan professional va amaliy vaqtli testlar tizimi.
+                </p>
+            </div>
+
+            <!-- Student Registration Card -->
+            <div class="max-w-xl mx-auto glass p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-6">
+                <h2 class="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-3">
+                    <i data-lucide="user-check" class="w-5 h-5 text-brand-500"></i>
+                    O‘quvchi Ma'lumotlari
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Ismingiz *</label>
+                            <input type="text" id="studentFirstname" placeholder="Masalan: Jasur" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Familiyangiz *</label>
+                            <input type="text" id="studentLastname" placeholder="Masalan: Alimov" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Guruh Nomi *</label>
+                        <input type="text" id="studentGroup" placeholder="Masalan: FN-24, J-102" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition">
+                    </div>
+                </div>
+
+                <!-- Mode Selection -->
+                <div class="space-y-3 pt-2">
+                    <label class="block text-sm font-semibold text-gray-800 dark:text-gray-200">Test Rejimini Tanlang:</label>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- HTML Quiz Option -->
+                        <div onclick="selectQuizMode('html')" id="mode-html" class="mode-card p-4 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-brand-500 cursor-pointer transition-all space-y-1 bg-white/40 dark:bg-gray-900/40">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-gray-900 dark:text-white flex items-center gap-1.5"><i data-lucide="file-type-html" class="w-4 h-4 text-orange-500"></i> HTML Testi</span>
+                                <span class="text-xs bg-orange-500/10 text-orange-500 px-2 py-0.5 rounded-md font-semibold">30 ta</span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">6 ta HTML mavzusi (30 daqiqa)</p>
+                        </div>
+
+                        <!-- CSS Quiz Option -->
+                        <div onclick="selectQuizMode('css')" id="mode-css" class="mode-card p-4 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-brand-500 cursor-pointer transition-all space-y-1 bg-white/40 dark:bg-gray-900/40">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-gray-900 dark:text-white flex items-center gap-1.5"><i data-lucide="palette" class="w-4 h-4 text-blue-500"></i> CSS Testi</span>
+                                <span class="text-xs bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-md font-semibold">40 ta</span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">14 ta CSS mavzusi (40 daqiqa)</p>
+                        </div>
+
+                        <!-- Full Exam Option -->
+                        <div onclick="selectQuizMode('full')" id="mode-full" class="mode-card p-4 rounded-xl border-2 border-brand-500 bg-brand-500/5 cursor-pointer transition-all space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-gray-900 dark:text-white flex items-center gap-1.5"><i data-lucide="award" class="w-4 h-4 text-brand-500"></i> HTML + CSS Imtihon</span>
+                                <span class="text-xs bg-brand-500/20 text-brand-500 px-2 py-0.5 rounded-md font-semibold">50 ta</span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Umumiy imtihon (50 daqiqa)</p>
+                        </div>
+
+                        <!-- Single Topic Option -->
+                        <div onclick="selectQuizMode('single')" id="mode-single" class="mode-card p-4 rounded-xl border-2 border-gray-200 dark:border-gray-800 hover:border-brand-500 cursor-pointer transition-all space-y-1 bg-white/40 dark:bg-gray-900/40">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-gray-900 dark:text-white flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4 text-purple-500"></i> Alohida Mavzu</span>
+                                <span class="text-xs bg-purple-500/10 text-purple-500 px-2 py-0.5 rounded-md font-semibold">10 ta</span>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Tanlangan bitta mavzu (10 daqiqa)</p>
+                        </div>
+                    </div>
+
+                    <!-- Topic Selector Dropdown (Hidden by default) -->
+                    <div id="topicSelectContainer" class="hidden pt-2">
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Kerakli mavzuni tanlang:</label>
+                        <select id="singleTopicSelect" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                            <optgroup label="HTML Mavzulari">
+                                <option value="HTML Intro">1. HTML Intro</option>
+                                <option value="HTML Form">2. HTML Form</option>
+                                <option value="HTML Media">3. HTML Media</option>
+                                <option value="HTML Table">4. HTML Table</option>
+                                <option value="HTML List">5. HTML List</option>
+                                <option value="HTML umumiy takrorlash">6. HTML umumiy takrorlash</option>
+                            </optgroup>
+                            <optgroup label="CSS Mavzulari">
+                                <option value="CSS Intro">1. CSS Intro</option>
+                                <option value="CSS Text">2. CSS Text</option>
+                                <option value="CSS Text & Icons">3. CSS Text & Icons</option>
+                                <option value="CSS Background">4. CSS Background</option>
+                                <option value="CSS Box Model">5. CSS Box Model</option>
+                                <option value="CSS Position">6. CSS Position</option>
+                                <option value="CSS Selectors & Shadows">7. CSS Selectors & Shadows</option>
+                                <option value="CSS Pseudo Elements">8. CSS Pseudo Elements</option>
+                                <option value="CSS Flex">9. CSS Flex</option>
+                                <option value="CSS Flex 2">10. CSS Flex 2</option>
+                                <option value="CSS Grid">11. CSS Grid</option>
+                                <option value="CSS Transform / Transition">12. CSS Transform / Transition</option>
+                                <option value="CSS Animation">13. CSS Animation</option>
+                                <option value="CSS Figma to CSS">14. CSS Figma to CSS</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="startQuiz()" class="w-full py-3.5 px-6 rounded-xl font-bold text-white bg-gradient-to-r from-brand-600 via-accent-600 to-brand-700 hover:from-brand-700 hover:to-accent-700 shadow-xl shadow-brand-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 text-base">
+                    <span>Testni Boshlash</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. QUIZ RUNNING SCREEN -->
+        <section id="screen-quiz" class="hidden space-y-6">
+            <!-- Quiz Header Info Bar -->
+            <div class="glass p-4 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="text-sm">
+                        <span class="text-gray-500 dark:text-gray-400 block text-xs">O‘quvchi:</span>
+                        <span id="quizUserDisplay" class="font-bold text-gray-900 dark:text-white">Jasur Alimov</span>
+                    </div>
+                    <div class="h-8 w-px bg-gray-200 dark:bg-gray-800 hidden sm:block"></div>
+                    <div class="text-sm">
+                        <span class="text-gray-500 dark:text-gray-400 block text-xs">Test Rejimi:</span>
+                        <span id="quizModeDisplay" class="font-semibold text-brand-600 dark:text-brand-400">HTML + CSS Imtihon</span>
+                    </div>
+                </div>
+
+                <!-- Timer & Actions -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 font-mono font-bold text-base">
+                        <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+                        <span id="timerDisplay">49:59</span>
+                    </div>
+                    <button onclick="confirmSubmitQuiz()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm transition-all shadow-md flex items-center gap-1.5">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        <span>Yakunlash</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-semibold text-gray-600 dark:text-gray-400">
+                    <span id="progressText">Savol: 1 / 50</span>
+                    <span id="progressPercent">2% Bajarildi</span>
+                </div>
+                <div class="w-full h-2.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                    <div id="progressBarFill" class="h-full bg-gradient-to-r from-brand-500 to-accent-500 transition-all duration-300" style="width: 2%;"></div>
+                </div>
+            </div>
+
+            <!-- Main Question & Options Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Left: Question Card (3 cols) -->
+                <div class="lg:col-span-3 space-y-6">
+                    <div class="glass p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-6 relative">
+                        <!-- Topic & Difficulty Badge -->
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span id="questionTopicBadge" class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+                                HTML Form
+                            </span>
+                            <span id="questionDiffBadge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                                O‘rtacha
+                            </span>
+                        </div>
+
+                        <!-- Question Text -->
+                        <h3 id="questionText" class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-relaxed">
+                            Quyidagi HTML elementlaridan qaysi biri forma ma'lumotlarini serverga yuborish uchun ishlatiladi?
+                        </h3>
+
+                        <!-- Optional Code Snippet Block -->
+                        <div id="questionCodeBlock" class="hidden bg-gray-900 text-gray-100 p-4 rounded-xl text-sm overflow-x-auto border border-gray-800 font-mono shadow-inner">
+                            <pre><code id="questionCode"></code></pre>
+                        </div>
+
+                        <!-- Options List -->
+                        <div id="optionsContainer" class="space-y-3 pt-2">
+                            <!-- Dynamic Options Rendered via JS -->
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="flex items-center justify-between pt-6 border-t border-gray-100 dark:border-gray-800">
+                            <button id="prevBtn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium text-sm flex items-center gap-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                <span>Oldingi</span>
+                            </button>
+                            <button id="nextBtn" onclick="navigateQuestion(1)" class="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm flex items-center gap-2 transition shadow-lg shadow-brand-500/20">
+                                <span>Keyingi</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Questions Navigation Grid (1 col) -->
+                <div class="lg:col-span-1">
+                    <div class="glass p-5 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-4">
+                        <h4 class="text-sm font-bold text-gray-900 dark:text-white flex items-center justify-between">
+                            <span>Savollar Ro‘yxati</span>
+                            <span class="text-xs text-gray-500 font-normal">Tugmani bosing</span>
+                        </h4>
+                        <div id="questionGrid" class="grid grid-cols-5 gap-2 max-h-80 overflow-y-auto custom-scrollbar p-1">
+                            <!-- Rendered Grid Numbers via JS -->
+                        </div>
+                        <div class="pt-2 text-xs space-y-1.5 text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-800">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-md bg-brand-600"></span> Javob berilgan
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-md border-2 border-brand-500"></span> Hozirgi savol
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-md bg-gray-200 dark:bg-gray-800"></span> Belgilanmagan
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. RESULTS & ANALYSIS SCREEN -->
+        <section id="screen-result" class="hidden space-y-8 animate-fadeIn">
+            <!-- Results Overview Header -->
+            <div class="glass p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl text-center space-y-4 relative overflow-hidden">
+                <div class="absolute -top-12 -right-12 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl"></div>
+                
+                <div class="inline-flex p-3 rounded-2xl bg-brand-500/10 text-brand-600 dark:text-brand-400">
+                    <i data-lucide="trophy" class="w-10 h-10"></i>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-gray-900 dark:text-white">
+                    Test Natijangiz: <span id="resBadgeGrade" class="gradient-text">A'lo</span>
+                </h2>
+                <p id="resSubtitle" class="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+                    Tabriklaymiz, siz HTML va CSS bo‘yicha yuqori bilim darajasini ko‘rsatdingiz!
+                </p>
+
+                <!-- Key Metrics Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 max-w-4xl mx-auto">
+                    <div class="p-4 rounded-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block font-medium">Umumiy Foiz</span>
+                        <span id="resScorePercent" class="text-2xl font-black text-brand-600 dark:text-brand-400">92%</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block font-medium">To‘g‘ri Javoblar</span>
+                        <span id="resCorrectCount" class="text-2xl font-black text-emerald-500">46 / 50</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block font-medium">Noto‘g‘ri / O‘tkazilgan</span>
+                        <span id="resWrongCount" class="text-2xl font-black text-rose-500">4</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block font-medium">Sarflangan Vaqt</span>
+                        <span id="resTimeSpent" class="text-2xl font-black text-purple-500">32m 14s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdowns -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Topic Breakdown Stats -->
+                <div class="lg:col-span-1 glass p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-4">
+                    <h3 class="font-bold text-base text-gray-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="bar-chart-2" class="w-5 h-5 text-brand-500"></i>
+                        Mavzular Kesimida Natija
+                    </h3>
+                    <div id="topicBreakdownList" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar pr-1">
+                        <!-- Rendered Topic Stats via JS -->
+                    </div>
+                </div>
+
+                <!-- Detailed Error Analysis / Question Review -->
+                <div class="lg:col-span-2 glass p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-base text-gray-900 dark:text-white flex items-center gap-2">
+                            <i data-lucide="file-search" class="w-5 h-5 text-accent-500"></i>
+                            Xatolar va Savollar Tahlili
+                        </h3>
+                        <span class="text-xs text-gray-500">Barcha savollar ko‘rsatilgan</span>
+                    </div>
+
+                    <div id="answersReviewList" class="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+                        <!-- Detailed List of Questions with explanations via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <button onclick="showScreen('screen-welcome')" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold transition shadow-lg shadow-brand-500/20 flex items-center gap-2">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                    <span>Qayta Test Ishlash</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. MENTOR DASHBOARD & CRUD SCREEN -->
+        <section id="screen-mentor" class="hidden space-y-6 animate-fadeIn">
+            <!-- Mentor Header -->
+            <div class="flex flex-wrap items-center justify-between gap-4 glass p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i data-lucide="shield" class="w-7 h-7 text-brand-500"></i>
+                        Mentor Paneli va Statistika
+                    </h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">O‘quvchilar natijalarini kuzatish, eksport qilish va savollarni boshqarish</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="openModal('modal-add-question')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition flex items-center gap-2 shadow-md">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>Yangi Savol Qo‘shish</span>
+                    </button>
+                    <button onclick="exportResultsCSV()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold transition flex items-center gap-2 shadow-md">
+                        <i data-lucide="download" class="w-4 h-4"></i>
+                        <span>CSV Eksport</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="glass p-4 rounded-xl border border-gray-200 dark:border-gray-800 flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex flex-wrap gap-3 items-center w-full sm:w-auto">
+                    <!-- Search Input -->
+                    <div class="relative min-w-[240px]">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="mentorSearchInput" oninput="filterMentorResults()" placeholder="O‘quvchi ismi yoki guruh..." class="w-full pl-9 pr-4 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-brand-500 outline-none">
+                    </div>
+                    <!-- Group Filter -->
+                    <select id="mentorGroupFilter" onchange="filterMentorResults()" class="px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                        <option value="all">Barcha Guruhlar</option>
+                        <option value="FN-24">FN-24</option>
+                        <option value="J-102">J-102</option>
+                        <option value="FS-15">FS-15</option>
+                    </select>
+                </div>
+
+                <div class="text-xs text-gray-500">
+                    Jami natijalar: <span id="mentorTotalCount" class="font-bold text-brand-500">0</span> ta
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div class="glass rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100/50 dark:bg-gray-900/50 text-xs text-gray-500 uppercase font-semibold border-b border-gray-200 dark:border-gray-800">
+                                <th class="p-4">O‘quvchi</th>
+                                <th class="p-4">Guruh</th>
+                                <th class="p-4">Test Turi</th>
+                                <th class="p-4">Ball / Foiz</th>
+                                <th class="p-4">Baho</th>
+                                <th class="p-4">Vaqt</th>
+                                <th class="p-4">Sana</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mentorTableBody" class="divide-y divide-gray-200 dark:divide-gray-800 text-sm">
+                            <!-- Rendered rows via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-6 text-center text-xs text-gray-500 dark:text-gray-400">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+                © 2026 DevTest UX Academy. Barcha huquqlar himoyalangan.
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hover:underline cursor-pointer" onclick="openModal('modal-code-docs')">Full-Stack Docs</span>
+                <span>•</span>
+                <span>200 ta HTML & CSS Savollar Bazasi</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: MENTOR AUTH LOGIN -->
+    <div id="modal-mentor-auth" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass max-w-md w-full p-6 sm:p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-500 mx-auto flex items-center justify-center">
+                    <i data-lucide="lock" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">Mentor Tizimiga Kirish</h3>
+                <p class="text-xs text-gray-500">Parol va loginingizni kiriting (Demo: admin / admin123)</p>
+            </div>
+
+            <form onsubmit="handleMentorLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Login</label>
+                    <input type="text" id="mentorUsername" value="admin" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Parol</label>
+                    <input type="password" id="mentorPassword" value="admin123" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none">
+                </div>
+
+                <div id="mentorAuthError" class="hidden text-xs text-rose-500 font-semibold text-center">
+                    Login yoki parol xato!
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="button" onclick="closeModal('modal-mentor-auth')" class="w-1/2 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 font-semibold text-sm">Bekor qilish</button>
+                    <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-md">Kirish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD NEW QUESTION (MENTOR CRUD) -->
+    <div id="modal-add-question" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass max-w-xl w-full p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i data-lucide="plus" class="w-5 h-5 text-emerald-500"></i>
+                    Yangi Savol Qo‘shish
+                </h3>
+                <button onclick="closeModal('modal-add-question')" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleAddNewQuestion(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Mavzu</label>
+                        <select id="newQTopic" class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                            <option value="HTML Intro">HTML Intro</option>
+                            <option value="HTML Form">HTML Form</option>
+                            <option value="CSS Flex">CSS Flex</option>
+                            <option value="CSS Grid">CSS Grid</option>
+                            <option value="CSS Position">CSS Position</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Qiyinchilik</label>
+                        <select id="newQDiff" class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                            <option value="easy">Oson</option>
+                            <option value="medium">O‘rtacha</option>
+                            <option value="hard">Murakkab</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Savol Matni</label>
+                    <textarea id="newQText" required rows="2" placeholder="Savol matnini kiriting..." class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none"></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400">Variantlar (A, B, C, D)</label>
+                    <input type="text" id="newOptA" placeholder="A varianti" required class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                    <input type="text" id="newOptB" placeholder="B varianti" required class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                    <input type="text" id="newOptC" placeholder="C varianti" required class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                    <input type="text" id="newOptD" placeholder="D varianti" required class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">To‘g‘ri Javob Indeksi</label>
+                    <select id="newCorrectIdx" class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none">
+                        <option value="0">A varianti</option>
+                        <option value="1">B varianti</option>
+                        <option value="2">C varianti</option>
+                        <option value="3">D varianti</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Tushuntirish (Explanation)</label>
+                    <textarea id="newExpl" required rows="2" placeholder="Nega ushbu javob to‘g‘ri ekanligi haqida tushuntirish..." class="w-full px-3 py-2 rounded-xl text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 outline-none"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3">
+                    <button type="button" onclick="closeModal('modal-add-question')" class="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 text-sm font-semibold">Bekor qilish</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: FULL-STACK BACKEND & VERCEL DEPLOY DOCS -->
+    <div id="modal-code-docs" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass max-w-4xl w-full p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="server" class="w-6 h-6 text-brand-500"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Full-Stack Backend kodi va Vercel Deploy Yo‘riqnomasi</h3>
+                        <p class="text-xs text-gray-500">Node.js, Express, MongoDB REST API va Deploy arxitekturasi</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-code-docs')" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-6 text-sm text-gray-700 dark:text-gray-300">
+                <!-- Section 1: Project Structure -->
+                <div>
+                    <h4 class="font-bold text-base text-brand-600 dark:text-brand-400 mb-2 flex items-center gap-2">
+                        <i data-lucide="folder-tree" class="w-4 h-4"></i> 1. Loyiha Papka Tuzilmasi (Folder Architecture)
+                    </h4>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs font-mono overflow-x-auto"><code>devtest-app/
+├── server/
+│   ├── config/db.js          # MongoDB Ulanishi
+│   ├── models/
+│   │   ├── Question.js       # 200 ta Savollar Schema
+│   │   └── Result.js         # O'quvchilar Natijalari Schema
+│   ├── routes/
+│   │   ├── quizRoutes.js     # Test API Endpointlar
+│   │   └── mentorRoutes.js   # Mentor Auth & CRUD API
+│   ├── controllers/
+│   │   ├── quizController.js
+│   │   └── mentorController.js
+│   ├── middleware/auth.js    # JWT Mentor Authentification
+│   ├── index.js              # Express Server Asosiy Kirish
+│   └── package.json
+└── client/
+    ├── index.html            # Zamonaviy Frontend (Tailwind + JS)
+    └── vercel.json           # Vercel Deploy Config</code></pre>
+                </div>
+
+                <!-- Section 2: Express Server Code Sample -->
+                <div>
+                    <h4 class="font-bold text-base text-brand-600 dark:text-brand-400 mb-2 flex items-center gap-2">
+                        <i data-lucide="code" class="w-4 h-4"></i> 2. Node.js + Express Server (`server/index.js`)
+                    </h4>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs font-mono overflow-x-auto"><code>const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log('MongoDB ga muvaffaqiyatli ulandi'))
+  .catch(err => console.error('DB Xatolik:', err));
+
+// Routes
+app.use('/api/quiz', require('./routes/quizRoutes'));
+app.use('/api/mentor', require('./routes/mentorRoutes'));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server ${PORT}-portda ishlamoqda`));</code></pre>
+                </div>
+
+                <!-- Section 3: Question Schema Code Sample -->
+                <div>
+                    <h4 class="font-bold text-base text-brand-600 dark:text-brand-400 mb-2 flex items-center gap-2">
+                        <i data-lucide="database" class="w-4 h-4"></i> 3. MongoDB Question Model (`server/models/Question.js`)
+                    </h4>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs font-mono overflow-x-auto"><code>const mongoose = require('mongoose');
+
+const QuestionSchema = new mongoose.Schema({
+    topic: { type: String, required: true }, // masalan: "HTML Form"
+    difficulty: { type: String, enum: ['easy', 'medium', 'hard'], default: 'medium' },
+    question: { type: String, required: true },
+    codeSnippet: { type: String, default: "" },
+    options: [{ type: String, required: true }],
+    correctIndex: { type: Number, required: true },
+    explanation: { type: String, required: true }
+}, { timestamps: true });
+
+module.exports = mongoose.model('Question', QuestionSchema);</code></pre>
+                </div>
+
+                <!-- Section 4: Vercel & Hosting Deploy Instructions -->
+                <div class="space-y-2">
+                    <h4 class="font-bold text-base text-brand-600 dark:text-brand-400 flex items-center gap-2">
+                        <i data-lucide="rocket" class="w-4 h-4"></i> 4. Vercel va Render Hostingga Joylash (Deploy Guide)
+                    </h4>
+                    <ol class="list-decimal list-inside space-y-1 text-xs leading-relaxed">
+                        <li><strong>GitHub Repositori Yaratish:</strong> Barcha kodlarni GitHub repositoriyasiga yuklang (`git push`).</li>
+                        <li><strong>MongoDB Atlas:</strong> <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">mongodb.com</code> saytidan bepul MongoDB klaster yaratib connection string URI oling.</li>
+                        <li><strong>Backendni Deploy qilish (Render.com / Railway):</strong> Render.com ga kirib `server` papkasini tanlang, `MONGO_URI` va `JWT_SECRET` environment variable larini kiriting.</li>
+                        <li><strong>Frontendni Vercel ga joylash:</strong> Vercel.com sahifasiga o'tib repositoriyani tanlang va bir bosishda Publish qiling!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                <button onclick="closeModal('modal-code-docs')" class="px-5 py-2 rounded-xl bg-brand-600 text-white font-semibold text-sm">Tushundim / Yopish</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC & 200 SAVOLLAR BAZASI -->
+    <script>
+        // -------------------------------------------------------------
+        // 2. STATE MANAGEMENT & VERCEL INTEGRATION
+        // -------------------------------------------------------------
+        let currentQuizQuestions = [];
+        let currentQuestionIdx = 0;
+        let userAnswers = {}; // { qIndex: selectedOptionIdx }
+        let quizTimer = null;
+        let timeRemainingSeconds = 0;
+        let selectedQuizMode = 'full'; // 'html', 'css', 'full', 'single'
+        let currentStudent = { firstname: '', lastname: '', group: '' };
+        
+        // Load initial results from LocalStorage
+        let resultsHistory = JSON.parse(localStorage.getItem('devtest_results')) || [
+            { id: 101, firstname: "Jasur", lastname: "Alimov", group: "FN-24", mode: "HTML + CSS Imtihon", scorePercent: 92, correct: 46, total: 50, date: "2026-10-24", timeSpent: "32m 14s" },
+            { id: 102, firstname: "Malika", lastname: "Kamilova", group: "J-102", mode: "CSS Testi", scorePercent: 85, correct: 34, total: 40, date: "2026-10-25", timeSpent: "24m 50s" },
+            { id: 103, firstname: "Sardor", lastname: "Tursunov", group: "FN-24", mode: "HTML Testi", scorePercent: 60, correct: 18, total: 30, date: "2026-10-26", timeSpent: "18m 20s" }
+        ];
+
+        // Sync with Vercel API / Serverless Endpoint if available
+        async function fetchVercelResults() {
+            try {
+                const res = await fetch('/api/results');
+                if (res.ok) {
+                    const serverData = await res.json();
+                    if (Array.isArray(serverData) && serverData.length > 0) {
+                        resultsHistory = serverData;
+                        localStorage.setItem('devtest_results', JSON.stringify(resultsHistory));
+                        renderMentorTable();
+                    }
+                }
+            } catch (err) {
+                console.log("Vercel Serverless API serveriga bog'lanishda muammo (Offline mode ishlamoqda)");
+            }
+        }
+        
+        // Fetch server results on load
+        fetchVercelResults();
+
+        // Custom Mentor Questions Pool (Dynamic CRUD)
+        let dynamicQuestions = [...questionsDatabase];
+
+        // -------------------------------------------------------------
+        // 3. INITIALIZATION & THEME TOGGLE
+        // -------------------------------------------------------------
+        window.onload = function() {
+            lucide.createIcons();
+            initTheme();
+            renderMentorTable();
+        };
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('devtest_theme', 'light');
+                document.getElementById('themeIconSun').classList.add('hidden');
+                document.getElementById('themeIconMoon').classList.remove('hidden');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('devtest_theme', 'dark');
+                document.getElementById('themeIconMoon').classList.add('hidden');
+                document.getElementById('themeIconSun').classList.remove('hidden');
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('devtest_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIconSun').classList.add('hidden');
+                document.getElementById('themeIconMoon').classList.remove('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIconMoon').classList.add('hidden');
+                document.getElementById('themeIconSun').classList.remove('hidden');
+            }
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(screenId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // -------------------------------------------------------------
+        // 4. QUIZ START & SELECTION LOGIC
+        // -------------------------------------------------------------
+        function selectQuizMode(mode) {
+            selectedQuizMode = mode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('border-brand-500', 'bg-brand-500/10', 'bg-brand-500/5');
+                card.classList.add('border-gray-200', 'dark:border-gray-800');
+            });
+
+            const activeCard = document.getElementById(`mode-${mode}`);
+            if (activeCard) {
+                activeCard.classList.remove('border-gray-200', 'dark:border-gray-800');
+                activeCard.classList.add('border-brand-500', 'bg-brand-500/10');
+            }
+
+            const topicContainer = document.getElementById('topicSelectContainer');
+            if (mode === 'single') {
+                topicContainer.classList.remove('hidden');
+            } else {
+                topicContainer.classList.add('hidden');
+            }
+        }
+
+        function shuffleArray(arr) {
+            let array = [...arr];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            const fname = document.getElementById('studentFirstname').value.trim();
+            const lname = document.getElementById('studentLastname').value.trim();
+            const group = document.getElementById('studentGroup').value.trim();
+
+            if (!fname || !lname || !group) {
+                alert("Iltimos, ism, familiya va guruh nomini to'liq kiriting!");
+                return;
+            }
+
+            currentStudent = { firstname: fname, lastname: lname, group: group };
+
+            // Filter questions based on selected mode
+            let pool = [];
+            let totalTimeMinutes = 30;
+
+            if (selectedQuizMode === 'html') {
+                pool = dynamicQuestions.filter(q => q.topic.startsWith('HTML'));
+                pool = shuffleArray(pool).slice(0, 30);
+                totalTimeMinutes = 30;
+            } else if (selectedQuizMode === 'css') {
+                pool = dynamicQuestions.filter(q => q.topic.startsWith('CSS'));
+                pool = shuffleArray(pool).slice(0, 40);
+                totalTimeMinutes = 40;
+            } else if (selectedQuizMode === 'full') {
+                const htmlQs = shuffleArray(dynamicQuestions.filter(q => q.topic.startsWith('HTML'))).slice(0, 20);
+                const cssQs = shuffleArray(dynamicQuestions.filter(q => q.topic.startsWith('CSS'))).slice(0, 30);
+                pool = shuffleArray([...htmlQs, ...cssQs]);
+                totalTimeMinutes = 50;
+            } else if (selectedQuizMode === 'single') {
+                const selectedTopic = document.getElementById('singleTopicSelect').value;
+                pool = dynamicQuestions.filter(q => q.topic === selectedTopic);
+                pool = shuffleArray(pool).slice(0, 10);
+                totalTimeMinutes = 10;
+            }
+
+            if (pool.length === 0) {
+                alert("Tanlangan mavzu bo'yicha savollar topilmadi!");
+                return;
+            }
+
+            currentQuizQuestions = pool;
+            currentQuestionIdx = 0;
+            userAnswers = {};
+            timeRemainingSeconds = totalTimeMinutes * 60;
+
+            // Update UI Elements
+            document.getElementById('quizUserDisplay').innerText = `${fname} ${lname} (${group})`;
+            document.getElementById('quizModeDisplay').innerText = getModeTitle(selectedQuizMode);
+
+            startTimer();
+            renderQuestion();
+            renderQuestionGrid();
+            showScreen('screen-quiz');
+        }
+
+        function getModeTitle(mode) {
+            switch(mode) {
+                case 'html': return 'HTML Testi (30 daqiqa)';
+                case 'css': return 'CSS Testi (40 daqiqa)';
+                case 'full': return 'HTML + CSS Umumiy Imtihon (50 daqiqa)';
+                case 'single': return 'Alohida Mavzu Testi';
+                default: return 'Test';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 5. TIMER & NAVIGATION LOGIC
+        // -------------------------------------------------------------
+        function startTimer() {
+            clearInterval(quizTimer);
+            updateTimerDisplay();
+
+            quizTimer = setInterval(() => {
+                timeRemainingSeconds--;
+                updateTimerDisplay();
+
+                if (timeRemainingSeconds <= 0) {
+                    clearInterval(quizTimer);
+                    alert("Vaqt tugadi! Test avtomatik ravishda yakunlanadi.");
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemainingSeconds / 60);
+            const seconds = timeRemainingSeconds % 60;
+            const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('timerDisplay').innerText = formatted;
+        }
+
+        function renderQuestion() {
+            const q = currentQuizQuestions[currentQuestionIdx];
+            const total = currentQuizQuestions.length;
+
+            // Progress text and fill
+            document.getElementById('progressText').innerText = `Savol: ${currentQuestionIdx + 1} / ${total}`;
+            const percent = Math.round(((currentQuestionIdx + 1) / total) * 100);
+            document.getElementById('progressPercent').innerText = `${percent}% Bajarildi`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+
+            // Badges
+            document.getElementById('questionTopicBadge').innerText = q.topic;
+            const diffElem = document.getElementById('questionDiffBadge');
+            diffElem.innerText = q.difficulty === 'easy' ? 'Oson' : q.difficulty === 'medium' ? 'O‘rtacha' : 'Murakkab';
+
+            // Question text
+            document.getElementById('questionText').innerText = `${currentQuestionIdx + 1}. ${q.question}`;
+
+            // Code Snippet
+            const codeBlock = document.getElementById('questionCodeBlock');
+            if (q.codeSnippet) {
+                codeBlock.classList.remove('hidden');
+                document.getElementById('questionCode').innerText = q.codeSnippet;
+            } else {
+                codeBlock.classList.add('hidden');
+            }
+
+            // Options
+            const optsContainer = document.getElementById('optionsContainer');
+            optsContainer.innerHTML = '';
+
+            const selectedOpt = userAnswers[currentQuestionIdx];
+
+            q.options.forEach((optText, optIdx) => {
+                const isSelected = selectedOpt === optIdx;
+                const optLetter = String.fromCharCode(65 + optIdx); // A, B, C, D
+
+                const optBtn = document.createElement('div');
+                optBtn.onclick = () => selectOption(optIdx);
+                optBtn.className = `p-4 rounded-xl border-2 transition-all cursor-pointer flex items-center gap-3 ${
+                    isSelected 
+                        ? 'border-brand-500 bg-brand-500/10 text-brand-600 dark:text-brand-300 font-semibold shadow-sm' 
+                        : 'border-gray-200 dark:border-gray-800 hover:border-brand-500/50 bg-white/50 dark:bg-gray-900/50 text-gray-800 dark:text-gray-200'
+                }`;
+
+                optBtn.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                        isSelected ? 'bg-brand-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'
+                    }">
+                        ${optLetter}
+                    </div>
+                    <span class="text-sm leading-relaxed">${escapeHtml(optText)}</span>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            // Prev / Next button state
+            document.getElementById('prevBtn').disabled = currentQuestionIdx === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentQuestionIdx === total - 1) {
+                nextBtn.innerHTML = `<span>Yakunlash</span> <i data-lucide="check" class="w-4 h-4"></i>`;
+                nextBtn.onclick = confirmSubmitQuiz;
+            } else {
+                nextBtn.innerHTML = `<span>Keyingi</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>`;
+                nextBtn.onclick = () => navigateQuestion(1);
+            }
+
+            lucide.createIcons();
+            updateGridState();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentQuestionIdx] = optIdx;
+            renderQuestion();
+            updateGridState();
+        }
+
+        function navigateQuestion(step) {
+            const targetIdx = currentQuestionIdx + step;
+            if (targetIdx >= 0 && targetIdx < currentQuizQuestions.length) {
+                currentQuestionIdx = targetIdx;
+                renderQuestion();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            currentQuestionIdx = idx;
+            renderQuestion();
+        }
+
+        function renderQuestionGrid() {
+            const grid = document.getElementById('questionGrid');
+            grid.innerHTML = '';
+
+            currentQuizQuestions.forEach((_, idx) => {
+                const btn = document.createElement('button');
+                btn.id = `grid-btn-${idx}`;
+                btn.onclick = () => jumpToQuestion(idx);
+                btn.className = `w-9 h-9 rounded-xl text-xs font-bold transition flex items-center justify-center border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400`;
+                btn.innerText = idx + 1;
+                grid.appendChild(btn);
+            });
+
+            updateGridState();
+        }
+
+        function updateGridState() {
+            currentQuizQuestions.forEach((_, idx) => {
+                const btn = document.getElementById(`grid-btn-${idx}`);
+                if (!btn) return;
+
+                const isAnswered = userAnswers.hasOwnProperty(idx);
+                const isCurrent = idx === currentQuestionIdx;
+
+                btn.className = 'w-9 h-9 rounded-xl text-xs font-bold transition flex items-center justify-center border ';
+
+                if (isCurrent) {
+                    btn.className += 'border-2 border-brand-500 bg-brand-500/20 text-brand-600 dark:text-brand-400 font-black shadow';
+                } else if (isAnswered) {
+                    btn.className += 'border-transparent bg-brand-600 text-white shadow-sm';
+                } else {
+                    btn.className += 'border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400';
+                }
+            });
+        }
+
+        function confirmSubmitQuiz() {
+            const unanswered = currentQuizQuestions.length - Object.keys(userAnswers).length;
+            let msg = "Testni yakunlashni tasdiqlaysizmi?";
+            if (unanswered > 0) {
+                msg = `Sizda hali ${unanswered} ta belgilanmagan savol mavjud! Baribir yakunlaysizmi?`;
+            }
+            if (confirm(msg)) {
+                submitQuiz();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 6. RESULTS CALCULATIONS & REVIEW
+        // -------------------------------------------------------------
+        function submitQuiz() {
+            clearInterval(quizTimer);
+
+            const total = currentQuizQuestions.length;
+            let correctCount = 0;
+            let wrongCount = 0;
+            let topicStats = {};
+
+            currentQuizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correctIndex;
+
+                if (!topicStats[q.topic]) {
+                    topicStats[q.topic] = { total: 0, correct: 0 };
+                }
+                topicStats[q.topic].total++;
+
+                if (isCorrect) {
+                    correctCount++;
+                    topicStats[q.topic].correct++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            const scorePercent = Math.round((correctCount / total) * 100);
+
+            // Grade evaluation
+            let gradeText = "Qayta tayyorlanish kerak";
+            if (scorePercent >= 90) gradeText = "A'lo";
+            else if (scorePercent >= 75) gradeText = "Yaxshi";
+            else if (scorePercent >= 60) gradeText = "Qoniqarli";
+
+            // Render Results Header
+            document.getElementById('resBadgeGrade').innerText = gradeText;
+            document.getElementById('resScorePercent').innerText = `${scorePercent}%`;
+            document.getElementById('resCorrectCount').innerText = `${correctCount} / ${total}`;
+            document.getElementById('resWrongCount').innerText = `${total - correctCount}`;
+            
+            // Calculate time spent
+            const totalDurationSec = (selectedQuizMode === 'html' ? 30 : selectedQuizMode === 'css' ? 40 : selectedQuizMode === 'full' ? 50 : 10) * 60;
+            const spentSec = Math.max(0, totalDurationSec - timeRemainingSeconds);
+            const mins = Math.floor(spentSec / 60);
+            const secs = spentSec % 60;
+            const timeSpentStr = `${mins}m ${secs}s`;
+            document.getElementById('resTimeSpent').innerText = timeSpentStr;
+
+            // Render Topic Breakdown
+            const breakdownContainer = document.getElementById('topicBreakdownList');
+            breakdownContainer.innerHTML = '';
+            for (const [topicName, stat] of Object.entries(topicStats)) {
+                const topicPct = Math.round((stat.correct / stat.total) * 100);
+                const item = document.createElement('div');
+                item.className = 'space-y-1';
+                item.innerHTML = `
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-gray-800 dark:text-gray-200">${topicName}</span>
+                        <span class="${topicPct >= 75 ? 'text-emerald-500' : topicPct >= 50 ? 'text-amber-500' : 'text-rose-500'}">${stat.correct}/${stat.total} (${topicPct}%)</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                        <div class="h-full ${topicPct >= 75 ? 'bg-emerald-500' : topicPct >= 50 ? 'bg-amber-500' : 'bg-rose-500'}" style="width: ${topicPct}%;"></div>
+                    </div>
+                `;
+                breakdownContainer.appendChild(item);
+            }
+
+            // Render Questions Review List
+            const reviewContainer = document.getElementById('answersReviewList');
+            reviewContainer.innerHTML = '';
+
+            currentQuizQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correctIndex;
+                const isUnanswered = userAns === undefined;
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border ${
+                    isCorrect 
+                        ? 'border-emerald-500/30 bg-emerald-500/5' 
+                        : 'border-rose-500/30 bg-rose-500/5'
+                } space-y-2`;
+
+                const userAnsText = isUnanswered ? "Javob berilmagan" : q.options[userAns];
+                const correctAnsText = q.options[q.correctIndex];
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                        <span class="px-2 py-0.5 rounded bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">${q.topic}</span>
+                        <span class="${isCorrect ? 'text-emerald-500' : 'text-rose-500'}">
+                            ${isCorrect ? '✓ To‘g‘ri' : isUnanswered ? '○ O‘tkazib yuborilgan' : '✗ Noto‘g‘ri'}
+                        </span>
+                    </div>
+                    <p class="text-sm font-bold text-gray-900 dark:text-white">${idx + 1}. ${escapeHtml(q.question)}</p>
+                    
+                    <div class="text-xs space-y-1 pt-1">
+                        <div class="text-gray-600 dark:text-gray-400">
+                            Sizning javobingiz: <span class="${isCorrect ? 'text-emerald-500 font-bold' : 'text-rose-500 font-bold'}">${escapeHtml(userAnsText)}</span>
+                        </div>
+                        ${!isCorrect ? `
+                            <div class="text-emerald-600 dark:text-emerald-400 font-semibold">
+            // Save Result to History (LocalStorage + Vercel Serverless API Sync)
+            const newRecord = {
+                id: Date.now(),
+                firstname: currentStudent.firstname,
+                lastname: currentStudent.lastname,
+                group: currentStudent.group,
+                mode: getModeTitle(selectedQuizMode),
+                scorePercent: scorePercent,
+                correct: correctCount,
+                total: total,
+                date: new Date().toISOString().split('T')[0],
+                timeSpent: timeSpentStr
+            };
+            
+            resultsHistory.unshift(newRecord);
+            localStorage.setItem('devtest_results', JSON.stringify(resultsHistory));
+            
+            // Try saving to Vercel Backend / Serverless Function
+            try {
+                fetch('/api/results', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newRecord)
+                }).catch(() => console.log("Localstorage saved. Vercel API call skipped in static environment."));
+            } catch (e) {
+                console.log("Saving locally");
+            }
+
+            renderMentorTable();
+            showScreen('screen-result');
+        }
+    <!-- MODAL 3: FULL-STACK BACKEND & VERCEL DEPLOY DOCS -->
+    <div id="modal-code-docs" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass max-w-4xl w-full p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="rocket" class="w-6 h-6 text-brand-500"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Vercel Deploy & Serverless API Tayyorgarligi</h3>
+                        <p class="text-xs text-gray-500">Loyiha fayllari tuzilmasi va Serverless Server kodi</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-code-docs')" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="space-y-6 text-sm text-gray-700 dark:text-gray-300">
+                <!-- Vercel Deployment Guide -->
+                <div class="space-y-2 bg-brand-500/10 p-4 rounded-xl border border-brand-500/20">
+                    <h4 class="font-bold text-base text-brand-600 dark:text-brand-400 flex items-center gap-2">
+                        <i data-lucide="check-circle" class="w-4 h-4"></i> 1-Qadam: Vercel-ga 1 Daqiqada Joylash (Deploy)
+                    </h4>
+                    <ol class="list-decimal list-inside space-y-1.5 text-xs leading-relaxed">
+                        <li>Kompyuteringizda yangi papka oching (masalan, <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">devtest-quiz</code>).</li>
+                        <li>Ushbu <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">index.html</code> faylini ushbu papkaga saqlang.</li>
+                        <li>Quyidagi Vercel fayllarini (<code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">vercel.json</code>, <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">package.json</code> va <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">api/results.js</code>) yarating.</li>
+                        <li>Papkani <strong>GitHub</strong>-ga yuklang yoki **Vercel CLI** (<code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded font-mono">vercel deploy</code>) orqali bitta buyruq bilan joylang!</li>
+                    </ol>
+                </div>
+
+                <!-- Vercel JSON Config -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-bold text-sm text-brand-600 dark:text-brand-400 font-mono">1. vercel.json (Konfiguratsiya)</h4>
+                        <button onclick="copyToClipboard('code-vercel-json')" class="text-xs text-brand-500 hover:underline flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i> Nusxalash</button>
+                    </div>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs font-mono overflow-x-auto"><code id="code-vercel-json">{
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "api/*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/results", "dest": "/api/results.js" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}</code></pre>
+                </div>
+
+                <!-- Package JSON -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-bold text-sm text-brand-600 dark:text-brand-400 font-mono">2. package.json</h4>
+                        <button onclick="copyToClipboard('code-package-json')" class="text-xs text-brand-500 hover:underline flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i> Nusxalash</button>
+                    </div>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs font-mono overflow-x-auto"><code id="code-package-json">{
+  "name": "devtest-quiz-platform",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}</code></pre>
+                </div>
+
+                <!-- Vercel Serverless Function (api/results.js) -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-bold text-sm text-brand-600 dark:text-brand-400 font-mono">3. api/results.js (Vercel Serverless Endpoint)</h4>
+                        <button onclick="copyToClipboard('code-api-results')" class="text-xs text-brand-500 hover:underline flex items-center gap-1"><i data-lucide="copy" class="w-3 h-3"></i> Nusxalash</button>
+                    </div>
+                    <pre class="bg-gray-900 text-gray-100 p-4 rounded-xl text-xs font-mono overflow-x-auto"><code id="code-api-results">// Vercel Serverless Function for Saving & Getting Quiz Results
+let memoryDatabase = [];
+
+module.exports = (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    if (req.method === 'POST') {
+        const resultData = req.body;
+        memoryDatabase.unshift(resultData);
+        return res.status(200).json({ success: true, message: "Natija saqlandi", data: resultData });
+    } 
+
+    if (req.method === 'GET') {
+        return res.status(200).json(memoryDatabase);
+    }
+
+    return res.status(405).json({ error: "Method not allowed" });
+};</code></pre>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                <button onclick="closeModal('modal-code-docs')" class="px-5 py-2 rounded-xl bg-brand-600 text-white font-semibold text-sm">Yopish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert("Kod nusxalandi!");
+        }
+    </script>
+</body>
+</html>
